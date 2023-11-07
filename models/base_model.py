@@ -19,12 +19,17 @@ class BaseModel:
         self.updated_at = datetime.now()
 
     def __str__(self):
+        """Returns a string representation of the instance"""
         return f'{self.__class__.__name__} ({self.id}) {self.__dict__}'
 
     def save(self):
+        """updates the update_at with the current time"""
+
         self.updated_at = datetime.now()
 
     def to_dict(self):
+        """Returns a dictionary representation of an instance"""
+
         obj_dict = self.__dict__.copy()
         obj_dict['__class__'] = self.__class__.__name__
         obj_dict['created_at'] = self.created_at.isoformat()
