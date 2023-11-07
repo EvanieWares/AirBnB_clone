@@ -5,6 +5,7 @@ Script for our base class
 """
 
 import uuid
+from models import storage
 from datetime import datetime
 
 class BaseModel:
@@ -28,6 +29,7 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at =  datetime.now()
             self.updated_at = datetime.now()
+            storage.new(self)
 
     def __str__(self):
         """Returns a string representation of the instance"""
@@ -37,6 +39,7 @@ class BaseModel:
         """updates the update_at with the current time"""
 
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self):
         """Returns a dictionary representation of an instance"""
