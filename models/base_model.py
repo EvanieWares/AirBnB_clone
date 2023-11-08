@@ -5,8 +5,8 @@ Script for our base class
 """
 
 import uuid
-from models import storage
 from datetime import datetime
+from models import storage
 
 class BaseModel:
     """Create a base class and assign public
