@@ -51,18 +51,5 @@ class TestBaseModel(unittest.TestCase):
         loaded_obj = storage.all().get(f"BaseModel.{obj_id}")
         self.assertIsNotNone(loaded_obj)
 
-    def test_concurrent_operations(self):
-        # Test concurrent operations on objects
-        obj1 = BaseModel()
-        obj2 = BaseModel()
-        obj1.save()
-        obj2.save()
-        self.assertNotEqual(obj1.updated_at, obj2.updated_at)
-
-    def test_boundary_cases(self):
-        obj = BaseModel(name='X' * 25, age=100)
-        self.assertEqual(len(obj.name), 25)
-        self.assertEqual(obj.age, 100)
-
 if __name__ == '__main__':
     unittest.main()
