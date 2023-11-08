@@ -6,7 +6,7 @@ Script for our base class
 
 import uuid
 from datetime import datetime
-from models import storage
+
 
 class BaseModel:
     """Create a base class and assign public
@@ -15,6 +15,7 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """initialize the class"""
+        from models import storage
         for key, value in kwargs.items():
             if key != "__class__":
                 if key == "created_at":
@@ -37,7 +38,7 @@ class BaseModel:
 
     def save(self):
         """updates the update_at with the current time"""
-
+        from models import storage
         self.updated_at = datetime.now()
         storage.save()
 
