@@ -31,14 +31,22 @@ import cmd
 import re
 from shlex import split
 from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 from models import storage
 
 
 PROMPT = '(hbnb) '
-MISSING_CLASS_NAME = '** class name missing **'
+CLASS_NAME_MISSING = '** class name missing **'
 NO_CLASS = "** class doesn't exist **"
-MISSING_INST_ID = '** instance id missing **'
+INST_ID_MISSING = '** instance id missing **'
 INST_NOT_FOUND = '** no instance found **'
+ATTR_NAME_MISSING = '** attribute name missing **'
+ATTR_VALUE_MISSUNG = '** value missing **'
 classes = {
     "BaseModel",
     "User",
@@ -73,7 +81,7 @@ class HBNBCommand(cmd.Cmd):
         """Creates a new instance of BaseModel"""
         args = custom_parser(arg)
         if len(args) == 0:
-            print(MISSING_CLASS_NAME)
+            print(CLASS_NAME_MISSING)
         elif args[0] not in classes:
             print(NO_CLASS)
         else:
@@ -89,11 +97,11 @@ class HBNBCommand(cmd.Cmd):
         all_obj = storage.all()
         args = custom_parser(arg)
         if len(args) == 0:
-            print(MISSING_CLASS_NAME)
+            print(CLASS_NAME_MISSING)
         elif args[0] not in classes:
             print(NO_CLASS)
         elif len(args) < 2:
-            print(MISSING_INST_ID)
+            print(INST_ID_MISSING)
         elif "{}.{}".format(args[0], args[1]) not in all_obj:
             print(INST_NOT_FOUND)
         else:
@@ -104,11 +112,11 @@ class HBNBCommand(cmd.Cmd):
         all_obj = storage.all()
         args = custom_parser(arg)
         if len(args) == 0:
-            print(MISSING_CLASS_NAME)
+            print(CLASS_NAME_MISSING)
         elif args[0] not in classes:
             print(NO_CLASS)
         elif len(args) < 2:
-            print(MISSING_INST_ID)
+            print(INST_ID_MISSING)
         elif "{}.{}".format(args[0], args[1]) not in all_obj.keys():
             print(INST_NOT_FOUND)
         else:
@@ -140,7 +148,46 @@ class HBNBCommand(cmd.Cmd):
         Updates an instance based on the class name and id by adding or
         updating attribute
         """
-        pass
+        all_obj = storage.all()
+        args = custom_parser(arg)
+
+        if len(args) == 0:
+            print(CLASS_NAME_MISSING)
+            return
+
+        class_name = args[0]
+        if class_name not in classes:
+            print(NO_CLASS)
+            return
+
+        if len(args) == 1:
+            print(INST_ID_MISSING)
+            return
+
+        instance_id = "{}.{}".format(class_name, args[1])
+        if instance_id not in all_obj:
+            print(INST_NOT_FOUND)
+            return
+
+        if len(args) == 2:
+            print(ATTR_NAME_MISSING)
+            return
+
+        if len(args) == 3:
+            print(ATTR_VALUE_MISSUNG)
+            return
+
+        obj = all_obj[instance_id]
+        attr_name = args[2]
+        attr_value = args[3]
+
+        if attr_name in obj.__class__.__dict__.keys():
+            val_type = type(obj.__class__.__dict__[attr_name])
+            obj.__dict__[attr_name] = val_type(attr_value)
+        else:
+            obj.__dict__[attr_name] = attr_value
+
+        storage.save()
 
     def emptyline(self):
         """Does not execute anything"""
