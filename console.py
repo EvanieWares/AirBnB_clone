@@ -28,6 +28,10 @@ The class obey the following conventions:
 
 """
 import cmd
+import re
+from shlex import split
+from models.base_model import BaseModel
+from models import storage
 
 
 PROMPT = '(hbnb) '
@@ -35,6 +39,15 @@ MISSING_CLASS_NAME = '** class name missing **'
 NO_CLASS = "** class doesn't exist **"
 MISSING_INST_ID = '** instance id missing **'
 INST_NOT_FOUND = '** no instance found **'
+classes = {
+    "BaseModel",
+    "User",
+    "State",
+    "City",
+    "Amenity",
+    "Place",
+    "Review"
+}
 
 
 class HBNBCommand(cmd.Cmd):
@@ -58,25 +71,69 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, arg):
         """Creates a new instance of BaseModel"""
-        pass
+        args = custom_parser(arg)
+        if len(args) == 0:
+            print(MISSING_CLASS_NAME)
+        elif args[0] not in classes:
+            print(NO_CLASS)
+        else:
+            new_id = eval(args[0])().id
+            print(f'{new_id}')
+            storage.save()
 
     def do_show(self, arg):
         """
         Prints the string representation of an instance based on the
         class name and id
         """
-        pass
+        all_obj = storage.all()
+        args = custom_parser(arg)
+        if len(args) == 0:
+            print(MISSING_CLASS_NAME)
+        elif args[0] not in classes:
+            print(NO_CLASS)
+        elif len(args) < 2:
+            print(MISSING_INST_ID)
+        elif "{}.{}".format(args[0], args[1]) not in all_obj:
+            print(INST_NOT_FOUND)
+        else:
+            print(all_obj["{}.{}".format(args[0], args[1])])
 
     def do_destroy(self, arg):
         """Deletes an instance based on the class name and id"""
-        pass
+        all_obj = storage.all()
+        args = custom_parser(arg)
+        if len(args) == 0:
+            print(MISSING_CLASS_NAME)
+        elif args[0] not in classes:
+            print(NO_CLASS)
+        elif len(args) < 2:
+            print(MISSING_INST_ID)
+        elif "{}.{}".format(args[0], args[1]) not in all_obj.keys():
+            print(INST_NOT_FOUND)
+        else:
+            del all_obj["{}.{}".format(args[0], args[1])]
+            storage.save()
 
     def do_all(self, arg):
         """
         Prints all string representation of all instances based or
         not on the class name
         """
-        pass
+        args = custom_parser(arg)
+        if (len(args) > 0):
+            class_name = args[0]
+            if class_name not in classes:
+                print(NO_CLASS)
+                return
+            object_list = [
+                str(obj) for obj in storage.all().values()
+                if obj.__class__.__name__ == class_name
+            ]
+        else:
+            object_list = [str(obj) for obj in storage.all().values()]
+
+        print(object_list)
 
     def do_update(self, arg):
         """
@@ -88,6 +145,28 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """Does not execute anything"""
         pass
+
+
+def custom_parser(arg):
+    """
+    Parse command arguments to a list
+    """
+    curly_match = re.search(r"\{(.*?)\}", arg)
+    bracket_match = re.search(r"\[(.*?)\]", arg)
+
+    if curly_match is None:
+        if bracket_match is None:
+            return [item.strip(",") for item in split(arg)]
+        else:
+            tokens = split(arg[:bracket_match.span()[0]])
+            result_list = [item.strip(",") for item in tokens]
+            result_list.append(bracket_match.group())
+            return result_list
+    else:
+        tokens = split(arg[:curly_match.span()[0]])
+        result_list = [item.strip(",") for item in tokens]
+        result_list.append(curly_match.group())
+        return result_list
 
 
 if __name__ == '__main__':
