@@ -7,17 +7,17 @@ import json
 
 class FileStorage:
     """A class that serializes instances to JSON"""
-    def __int__(self, file_path="file.json"):
+    def __init__(self, file_path="file.json"):
         self.__file_path = file_path
         self.__objects = {}
 
     def all(self):
         """Returns dictionary objects"""
-        return sefl.__objects
+        return self.__objects
 
     def new(self, obj):
         """sets in __objects the obj with key <obj class name>.id"""
-        key = "{}.{}".format(obj.__class__.name__, obj.id)
+        key = "{}.{}".format(obj.__class__.__name__, obj.id)
         self.__objects[key] = obj
 
     def save(self):
@@ -35,6 +35,11 @@ class FileStorage:
                 serialized_objects = json.load(json_file)
             for key, obj_dict in serialized_objects.items():
                 class_name, obj_id = key.split(".")
+                if class_name == "User":
+                    obj = User(**obj_dict)
+                else:
+                    pass
+                self.__object[key] = obj
 
         except FileNotFoundError:
             pass
