@@ -19,7 +19,7 @@ NO_CLASS = "** class doesn't exist **"
 INST_ID_MISSING = '** instance id missing **'
 INST_NOT_FOUND = '** no instance found **'
 ATTR_NAME_MISSING = '** attribute name missing **'
-ATTR_VALUE_MISSUNG = '** value missing **'
+ATTR_VALUE_MISSING = '** value missing **'
 classes = {
     "BaseModel",
     "User",
@@ -38,17 +38,13 @@ class HBNBCommand(cmd.Cmd):
     prompt = PROMPT
 
     def do_EOF(self, arg):
-        """Handles EOF"""
+        """EOF signal to exit the program."""
         print()
         return True
 
     def do_quit(self, arg):
-        """Exits the command intepreter"""
+        """Quit command to exit the program."""
         return True
-
-    def help_quit(self):
-        """Displays quit command info"""
-        print("Quit command to exit the program\n")
 
     def do_create(self, arg):
         """Creates a new instance of BaseModel"""
@@ -137,8 +133,8 @@ class HBNBCommand(cmd.Cmd):
             print(INST_ID_MISSING)
             return
 
-        instance_id = "{}.{}".format(class_name, args[1])
-        if instance_id not in all_obj:
+        instance_id = f"{class_name}.{args[1]}"
+        if instance_id not in all_obj.keys():
             print(INST_NOT_FOUND)
             return
 
@@ -147,18 +143,28 @@ class HBNBCommand(cmd.Cmd):
             return
 
         if len(args) == 3:
-            print(ATTR_VALUE_MISSUNG)
-            return
+            try:
+                type(eval(args[2])) != dict
+            except NameError:
+                print(ATTR_VALUE_MISSING)
+                return
 
         obj = all_obj[instance_id]
         attr_name = args[2]
-        attr_value = args[3]
-
-        if attr_name in obj.__class__.__dict__.keys():
-            val_type = type(obj.__class__.__dict__[attr_name])
-            obj.__dict__[attr_name] = val_type(attr_value)
+        if len(args) == 4:
+            attr_value = args[3]
+            if attr_name in obj.__class__.__dict__.keys():
+                val_type = type(obj.__class__.__dict__[attr_name])
+                obj.__dict__[attr_name] = val_type(attr_value)
+            else:
+                obj.__dict__[attr_name] = attr_value
         else:
-            obj.__dict__[attr_name] = attr_value
+            for key, value in eval(attr_name).items():
+                if key in obj.__class__.__dict__.keys() and type(obj.__class__.__dict__[key]) in {str, int, float}:
+                    val_type = type(obj.__class__.__dict__[key])
+                    obj.__dict__[key] = val_type(value)
+                else:
+                    obj.__dict__[key] = value
 
         storage.save()
 
