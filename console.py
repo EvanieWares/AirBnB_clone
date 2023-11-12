@@ -166,6 +166,39 @@ class HBNBCommand(cmd.Cmd):
         """Does not execute anything"""
         pass
 
+    def do_count(self, arg):
+        """Retrieves the number of instances of a class."""
+        args = custom_parser(arg)
+        count = 0
+        for obj in storage.all().values():
+            if args[0] == obj.__class__.__name__:
+                count += 1
+        print(count)
+
+    def default(self, arg):
+        """
+        Called when the command prefix is not recognized
+        """
+
+        command_mapping = {
+            "all": self.do_all,
+            "show": self.do_show,
+            "destroy": self.do_destroy,
+            "update": self.do_update,
+            "count": self.do_count
+        }
+
+        args = arg.split('.', 1)
+        if len(args) == 2:
+            search = re.search(r"\((.*?)\)", args[1])
+            if search:
+                command = [args[1][:search.span()[0]], search.group()[1:-1]]
+                if command[0] in command_mapping.keys():
+                    call = f"{args[0]} {command[1]}"
+                    return command_mapping[command[0]](call)
+
+        print(f"*** Unknown syntax: {arg}")
+
 
 def custom_parser(arg):
     """
