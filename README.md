@@ -17,7 +17,7 @@ The command interpreter allows you to interact with and manage AirBnB objects. I
 * **update <class> <id> <attribute> <value>**: Updates an instance based on the class name and id by adding or updating attributes, saving the change into the JSON file.
   + Example: `update BaseModel 1234-1234-1234 email "aibnb@mail.com"`
 
-### How to start
+## How to start
 To start the AirBnB clone command interpreter, run the following command in your terminal:
 ``` bash
 $ ./console.py
@@ -28,7 +28,7 @@ When you run this command the following prompt will appear:
 ```
 This prompt designates you are in the "HBnB" console
 
-### How to use
+## How to use
 Once the command interpreter is running, you can interact with it by entering commands. Use the `help` command to see the list of available commands and their descriptions.
 ``` bash
 (hbnb) help
@@ -36,7 +36,7 @@ Once the command interpreter is running, you can interact with it by entering co
 
 ### Examples
 
-``` bash
+```
 $ ./console.py
 (hbnb) create BaseModel
 1234-1234-1234
