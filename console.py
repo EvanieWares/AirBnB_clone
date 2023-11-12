@@ -47,7 +47,11 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def do_create(self, arg):
-        """Creates a new instance of BaseModel"""
+        """
+        Create a new class instance
+
+        Usage: create <class name>
+        """
         args = custom_parser(arg)
         if len(args) == 0:
             print(CLASS_NAME_MISSING)
@@ -62,6 +66,8 @@ class HBNBCommand(cmd.Cmd):
         """
         Prints the string representation of an instance based on the
         class name and id
+
+        Usage: show <class name> <id>
         """
         all_obj = storage.all()
         args = custom_parser(arg)
@@ -77,7 +83,11 @@ class HBNBCommand(cmd.Cmd):
             print(all_obj["{}.{}".format(args[0], args[1])])
 
     def do_destroy(self, arg):
-        """Deletes an instance based on the class name and id"""
+        """
+        Deletes an instance based on the class name and id
+
+        Usage: destroy <class name> <id>
+        """
         all_obj = storage.all()
         args = custom_parser(arg)
         if len(args) == 0:
@@ -96,6 +106,8 @@ class HBNBCommand(cmd.Cmd):
         """
         Prints all string representation of all instances based or
         not on the class name
+
+        Usage: all <class name> or all
         """
         args = custom_parser(arg)
         if (len(args) > 0):
@@ -114,8 +126,9 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, arg):
         """
-        Updates an instance based on the class name and id by adding or
-        updating attribute
+        Updates an instance based on the class name and id
+
+        Usage: update <class name> <id> <attribute name> <attribute value>
         """
         all_obj = storage.all()
         args = custom_parser(arg)
@@ -175,7 +188,11 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_count(self, arg):
-        """Retrieves the number of instances of a class."""
+        """
+        Retrieves the number of instances of a class
+
+        Usage: <class name>.count()
+        """
         args = custom_parser(arg)
         count = 0
         for obj in storage.all().values():
