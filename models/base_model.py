@@ -36,7 +36,7 @@ class BaseModel:
 
     def __str__(self):
         """Returns a string representation of the instance"""
-        return f'{self.__class__.__name__} ({self.id}) {self.__dict__}'
+        return f'[{self.__class__.__name__}] ({self.id}) {self.__dict__}'
 
     def save(self):
         """updates the update_at with the current time"""
