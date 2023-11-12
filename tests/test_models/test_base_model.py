@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Implements unittests for the BaseModel
+Implements unittests for the model/base_model.py
 
 Unittest classes:
     TestBaseModel_instantiation
@@ -16,7 +16,7 @@ from models.base_model import BaseModel
 
 
 class TestBaseModel_instantiation(unittest.TestCase):
-    """Testing for instantiation of the BaseModel class"""
+    """Testing the instantiation of the BaseModel class"""
 
     def test_no_args_instantiates(self):
         self.assertEqual(BaseModel, type(BaseModel()))
@@ -88,7 +88,7 @@ class TestBaseModel_instantiation(unittest.TestCase):
 
 
 class TestBaseModel_save(unittest.TestCase):
-    """Testing for save method of the BaseModel class"""
+    """Testing the save method of the BaseModel class"""
 
     @classmethod
     def setUp(self):
@@ -140,7 +140,7 @@ class TestBaseModel_save(unittest.TestCase):
 
 
 class TestBaseModel_to_dict(unittest.TestCase):
-    """Testing for to_dict method of the BaseModel class"""
+    """Testing the to_dict method of the BaseModel class"""
 
     def test_to_dict_type(self):
         bm = BaseModel()
