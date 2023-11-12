@@ -160,7 +160,9 @@ class HBNBCommand(cmd.Cmd):
                 obj.__dict__[attr_name] = attr_value
         else:
             for key, value in eval(attr_name).items():
-                if key in obj.__class__.__dict__.keys() and type(obj.__class__.__dict__[key]) in {str, int, float}:
+                if (key in obj.__class__.__dict__.keys() and
+                        type(obj.__class__.__dict__[key]) in
+                        {str, int, float}):
                     val_type = type(obj.__class__.__dict__[key])
                     obj.__dict__[key] = val_type(value)
                 else:
