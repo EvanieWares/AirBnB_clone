@@ -5,11 +5,3 @@ body {
 	font-size: 14px;
 	font-family: Circular, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-
-.logo {
-	background-image: url('images/logo.png');
-	background-size: contain;
-	background-repeat: no-repeat;
-	align-items: start center;
-	left: 20px;
-}
